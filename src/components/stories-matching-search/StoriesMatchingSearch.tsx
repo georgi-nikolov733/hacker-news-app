@@ -1,0 +1,21 @@
+import React from 'react';
+import {
+  PARAM_QUERY,
+  PARAM_SORT,
+  SORT_NEW,
+} from '../../constants/routes.constants';
+import { useSearchParams } from '../../hooks/use-search-params';
+import { StoriesPage } from '../stories-page/StoriesPage';
+
+export const StoriesMatchingSearch: React.FC = () => {
+  const searchParams = useSearchParams();
+
+  return (
+    <StoriesPage
+      query={searchParams.get(PARAM_QUERY) || ''}
+      searchByDate={searchParams.get(PARAM_SORT) === SORT_NEW}
+      showSort
+      showPeriod
+    />
+  );
+};
