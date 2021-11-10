@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { isError, useInfiniteQuery } from 'react-query';
 import { QUERY_HACKER_NEWS_DATA } from '../../constants/queries.constants';
 import {
@@ -62,17 +62,21 @@ export const StoriesPage: React.FC<StoriesPageProps> = ({
       lastPage.page + 1 < lastPage.nbPages && lastPage.page + 1,
   });
 
-  const storyIdSet = new Set<string>();
-  const stories: HackerNewsStory[] = [];
+  const stories = useMemo(() => {
+    const storyList: HackerNewsStory[] = [];
+    const storyIdSet = new Set<string>();
 
-  (data?.pages || [])
-    .flatMap((page) => page.hits)
-    .forEach((story) => {
-      if (!storyIdSet.has(story.objectID)) {
-        storyIdSet.add(story.objectID);
-        stories.push(story);
-      }
-    });
+    (data?.pages || [])
+      .flatMap((page) => page.hits)
+      .forEach((story) => {
+        if (!storyIdSet.has(story.objectID)) {
+          storyIdSet.add(story.objectID);
+          storyList.push(story);
+        }
+      });
+
+    return storyList;
+  }, [data]);
 
   switch (status) {
     case 'loading':
